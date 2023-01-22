@@ -1,13 +1,16 @@
 package com.minsait.springboot.web.app.controller;
 
 import com.minsait.springboot.web.app.models.Autor;
+import com.minsait.springboot.web.app.models.Editorial;
 import com.minsait.springboot.web.app.models.Libro;
+import com.minsait.springboot.web.app.service.IEditorialService;
 import com.minsait.springboot.web.app.service.ILibroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +35,7 @@ public class LibroController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+
     @PostMapping("/")
     public ResponseEntity<?> save(@RequestBody Libro libro, BindingResult result) {
         Map<String, String> errors = new HashMap<>();
@@ -52,7 +56,6 @@ public class LibroController {
                 libroService.guardarAutor(autor);
             }
         }
-
         return ResponseEntity.ok(libroService.save(libro));
     }
 
@@ -81,7 +84,7 @@ public class LibroController {
     }
 
     @PostMapping("/autor")
-    public ResponseEntity<?> guardarAutor(@RequestBody Autor autor, BindingResult result) {
+    public ResponseEntity<?> guardarAutor(@Valid @RequestBody Autor autor, BindingResult result) {
         Map<String, String> errors = new HashMap<>();
 
         Optional<Autor> autorDB = libroService.buscarAutorPorNombreYApellidos(autor.getNombres(), autor.getApellidos());
@@ -98,6 +101,4 @@ public class LibroController {
 
         return ResponseEntity.ok(libroService.guardarAutor(autor));
     }
-
-
 }
